@@ -24,8 +24,8 @@ RUN apk add --no-cache bash curl
 # Copy binary dari tahap builder
 COPY --from=builder /app/app .
 
-## Copy file .env
-#COPY .env .
+# Copy file .env
+COPY .env .
 
 # Jalankan aplikasi
 CMD ["./app"]
