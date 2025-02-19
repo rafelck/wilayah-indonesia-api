@@ -12,7 +12,7 @@ import (
 func GetVilanges(c *gin.Context) {
 	var villages []models.Villages
 	if err := database.DB.Where("district_id = ?", c.Param("district_id")).Find(&villages).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
