@@ -1,31 +1,23 @@
-# Gunakan image dasar dari Golang
-FROM golang:1.24 AS builder
+# Gunakan image base Golang versi terbaru
+FROM golang:1.24-alpine
 
-# Set working directory
+# Set working directory di dalam container
 WORKDIR /app
 
-# Copy semua file ke dalam container
-COPY . .
+# Copy file go.mod dan go.sum (jika ada)
+COPY go.mod go.sum ./
 
 # Download dependencies
-RUN go mod tidy
+RUN go mod download
+
+# Copy seluruh kode aplikasi ke dalam container
+COPY . .
 
 # Build aplikasi Go
-RUN go build -o app .
+RUN go build -o main .
 
-# Stage baru untuk image yang lebih ringan
-FROM alpine:latest
+# Expose port yang digunakan aplikasi
+EXPOSE 8080
 
-WORKDIR /root/
-
-# Install dependencies jika dibutuhkan
-RUN apk add --no-cache bash curl
-
-# Copy binary dari tahap builder
-COPY --from=builder /app/app .
-
-# Copy file .env
-COPY .env .
-
-# Jalankan aplikasi
-CMD ["./app"]
+# Perintah untuk menjalankan aplikasi
+CMD ["./main"]
